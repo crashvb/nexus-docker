@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+# Configure: nexus
+if [[ ! -e $EP_RUN ]] ; then
+	log "Configuring $(basename $0) for first run ..."
+
+	log "Initializing data volume ..."
+	mkdir --parents $NEXUS_DATA/nexus3/{etc,log,tmp}
+
+	if [[ -e $NEXUS_DATA/keystore.jks ]] ; then
+		log "Importing foreign keystore ..."
+		ln --symbolic $NEXUS_DATA/keystore.jks $NEXUS_HOME/etc/ssl/
+	fi
+
+	log "Applying ownership and permissions ..."
+	chown --recursive nexus:nexus $NEXUS_DATA
+fi
+
